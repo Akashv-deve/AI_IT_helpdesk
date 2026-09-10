@@ -1,0 +1,237 @@
+[
+  {
+    "id": 1,
+    "category": "wifi",
+    "title": "Wi-Fi not connecting",
+    "symptoms": ["wifi not connecting", "cannot connect to wifi", "wireless network unavailable", "no wifi signal"],
+    "causes": ["Incorrect password", "Router issues", "Driver problems", "Airplane mode enabled", "Network adapter disabled"],
+    "steps": [
+      "Check if Airplane mode is turned off.",
+      "Restart your router and modem (unplug for 30 seconds).",
+      "Forget the Wi-Fi network and reconnect with the correct password.",
+      "Update or reinstall the wireless network adapter driver.",
+      "Run the Windows Network Troubleshooter (Settings > Network & Internet > Status > Network troubleshooter)."
+    ]
+  },
+  {
+    "id": 2,
+    "category": "internet",
+    "title": "Internet is slow",
+    "symptoms": ["internet slow", "slow connection", "buffering", "high latency", "pages load slowly"],
+    "causes": ["Bandwidth congestion", "Background downloads", "DNS issues", "Outdated router firmware", "Malware"],
+    "steps": [
+      "Close unnecessary browser tabs and background applications.",
+      "Run a speed test at speedtest.net to confirm the issue.",
+      "Flush DNS cache: open Command Prompt and run 'ipconfig /flushdns'.",
+      "Restart your router and computer.",
+      "Check for malware using Windows Defender or a trusted antivirus.",
+      "Contact your ISP if the problem persists after basic checks."
+    ]
+  },
+  {
+    "id": 3,
+    "category": "login",
+    "title": "Cannot log in to account",
+    "symptoms": ["cannot login", "login failed", "account locked", "invalid credentials", "password incorrect"],
+    "causes": ["Wrong password", "Caps Lock on", "Account locked after failed attempts", "Expired password", "Network authentication issues"],
+    "steps": [
+      "Ensure Caps Lock is off and try typing the password carefully.",
+      "Use the 'Forgot Password' link to reset your password.",
+      "Wait 15-30 minutes if the account is temporarily locked.",
+      "Try logging in from a different browser or incognito mode.",
+      "Clear browser cache and cookies for the login site.",
+      "Contact IT support if the account remains locked."
+    ]
+  },
+  {
+    "id": 4,
+    "category": "password",
+    "title": "Password reset or forgotten password",
+    "symptoms": ["forgot password", "reset password", "password not working", "change password"],
+    "causes": ["Forgotten credentials", "Password policy requirements", "Sync issues across devices"],
+    "steps": [
+      "Use the official password reset page or self-service portal.",
+      "Check your registered email or phone for the reset link/code.",
+      "Create a new password that meets complexity requirements (uppercase, lowercase, number, special character).",
+      "Update the password on all devices and applications that use it.",
+      "Enable multi-factor authentication for better security."
+    ]
+  },
+  {
+    "id": 5,
+    "category": "printer",
+    "title": "Printer not working",
+    "symptoms": ["printer not printing", "printer offline", "print job stuck", "cannot find printer", "paper jam"],
+    "causes": ["Printer offline", "Paper jam", "Empty ink/toner", "Driver issues", "USB/network connection problem"],
+    "steps": [
+      "Check that the printer is powered on and has paper and ink/toner.",
+      "Ensure the printer is set as the default printer.",
+      "Cancel all stuck print jobs in the print queue and restart the Print Spooler service.",
+      "Reconnect the USB cable or verify the network connection.",
+      "Reinstall or update the printer driver from the manufacturer's website.",
+      "Run the Windows Printer Troubleshooter."
+    ]
+  },
+  {
+    "id": 6,
+    "category": "slow_computer",
+    "title": "Computer running slowly",
+    "symptoms": ["computer slow", "pc lagging", "high cpu usage", "system freezes", "slow startup"],
+    "causes": ["Too many startup programs", "Insufficient RAM", "Disk almost full", "Malware", "Outdated drivers"],
+    "steps": [
+      "Open Task Manager (Ctrl+Shift+Esc) and end unnecessary high-CPU processes.",
+      "Disable startup programs: Task Manager > Startup tab.",
+      "Free up disk space by deleting temporary files (Disk Cleanup).",
+      "Run a full antivirus scan.",
+      "Update Windows and drivers.",
+      "Consider adding more RAM or upgrading to an SSD if hardware is old."
+    ]
+  },
+  {
+    "id": 7,
+    "category": "vpn",
+    "title": "VPN connection problems",
+    "symptoms": ["vpn not connecting", "vpn disconnects", "cannot access vpn", "vpn error"],
+    "causes": ["Incorrect credentials", "Server overload", "Firewall blocking", "Outdated VPN client", "Network restrictions"],
+    "steps": [
+      "Verify your VPN username and password.",
+      "Try a different VPN server location if available.",
+      "Disable firewall or antivirus temporarily to test.",
+      "Update the VPN client software.",
+      "Restart the VPN service and your computer.",
+      "Contact your IT department for VPN configuration files or support."
+    ]
+  },
+  {
+    "id": 8,
+    "category": "email",
+    "title": "Email problems",
+    "symptoms": ["cannot send email", "cannot receive email", "outlook not working", "email sync issue", "mailbox full"],
+    "causes": ["Incorrect server settings", "Mailbox quota exceeded", "Authentication failure", "Internet connectivity", "Client configuration error"],
+    "steps": [
+      "Check your internet connection.",
+      "Verify email account settings (IMAP/SMTP/POP3 ports and servers).",
+      "Empty Deleted Items and Junk folders to free space.",
+      "Remove and re-add the email account in your client.",
+      "Try accessing email via webmail to isolate client vs server issues.",
+      "Update your email client application."
+    ]
+  },
+  {
+    "id": 9,
+    "category": "software",
+    "title": "Software installation problems",
+    "symptoms": ["cannot install software", "installation failed", "setup error", "missing dll", "compatibility error"],
+    "causes": ["Insufficient permissions", "Missing dependencies", "Incompatible OS version", "Corrupted installer", "Antivirus blocking"],
+    "steps": [
+      "Run the installer as Administrator (right-click > Run as administrator).",
+      "Temporarily disable antivirus and firewall.",
+      "Download a fresh copy of the installer from the official site.",
+      "Check system requirements for the software.",
+      "Install any required runtimes (Visual C++, .NET Framework).",
+      "Use Compatibility Mode if the software is older."
+    ]
+  },
+  {
+    "id": 10,
+    "category": "keyboard_mouse",
+    "title": "Keyboard or mouse not working",
+    "symptoms": ["keyboard not working", "mouse not responding", "cursor stuck", "keys not registering"],
+    "causes": ["Loose connection", "Driver issue", "Battery dead (wireless)", "USB port problem", "Hardware failure"],
+    "steps": [
+      "Check the USB connection or replace the batteries for wireless devices.",
+      "Try a different USB port.",
+      "Restart the computer.",
+      "Update or reinstall HID drivers in Device Manager.",
+      "Test the device on another computer to rule out hardware failure.",
+      "For Bluetooth devices, remove and re-pair them."
+    ]
+  },
+  {
+    "id": 11,
+    "category": "browser",
+    "title": "Browser issues",
+    "symptoms": ["browser crashes", "pages not loading", "extensions broken", "cache problems", "slow browser"],
+    "causes": ["Corrupted cache", "Too many extensions", "Outdated browser", "Conflicting software"],
+    "steps": [
+      "Clear browser cache and cookies.",
+      "Disable extensions one by one to identify the culprit.",
+      "Update the browser to the latest version.",
+      "Reset the browser to default settings.",
+      "Try a different browser to isolate the issue.",
+      "Scan for malware that may affect browsers."
+    ]
+  },
+  {
+    "id": 12,
+    "category": "windows",
+    "title": "Windows system issues",
+    "symptoms": ["blue screen", "windows update stuck", "start menu broken", "file explorer crash", "system restore"],
+    "causes": ["Corrupted system files", "Failed updates", "Driver conflicts", "Disk errors"],
+    "steps": [
+      "Run System File Checker: open Command Prompt as admin and type 'sfc /scannow'.",
+      "Run DISM: 'DISM /Online /Cleanup-Image /RestoreHealth'.",
+      "Check for Windows updates and install pending ones.",
+      "Boot into Safe Mode to troubleshoot.",
+      "Create a System Restore point and restore if needed.",
+      "Use Windows Recovery Environment for advanced repair."
+    ]
+  },
+  {
+    "id": 13,
+    "category": "wifi",
+    "title": "Wi-Fi keeps disconnecting",
+    "symptoms": ["wifi disconnects frequently", "unstable wireless", "wifi drops"],
+    "causes": ["Interference", "Power management settings", "Driver issues", "Router channel congestion"],
+    "steps": [
+      "Disable power saving for the wireless adapter in Device Manager.",
+      "Change the Wi-Fi channel on your router (prefer 5 GHz if available).",
+      "Update the wireless adapter driver.",
+      "Move closer to the router or reduce interference from other devices.",
+      "Forget and rejoin the network."
+    ]
+  },
+  {
+    "id": 14,
+    "category": "internet",
+    "title": "No internet access",
+    "symptoms": ["no internet", "connected but no internet", "limited connectivity", "dns not resolving"],
+    "causes": ["DNS failure", "IP configuration error", "ISP outage", "Router misconfiguration"],
+    "steps": [
+      "Check if other devices have internet.",
+      "Release and renew IP: 'ipconfig /release' then 'ipconfig /renew'.",
+      "Set DNS to 8.8.8.8 and 8.8.4.4 (Google DNS) or 1.1.1.1.",
+      "Restart modem and router in the correct order.",
+      "Contact your Internet Service Provider if the outage is widespread."
+    ]
+  },
+  {
+    "id": 15,
+    "category": "software",
+    "title": "Application keeps crashing",
+    "symptoms": ["app crashes", "program stops working", "application not responding", "error on launch"],
+    "causes": ["Corrupted installation", "Missing dependencies", "Incompatible updates", "Insufficient resources"],
+    "steps": [
+      "Update the application to the latest version.",
+      "Repair or reinstall the application.",
+      "Run the application as Administrator.",
+      "Check Event Viewer for specific error codes.",
+      "Ensure sufficient free disk space and RAM.",
+      "Temporarily disable antivirus to test interference."
+    ]
+  },
+  {
+    "id": 16,
+    "category": "vpn",
+    "title": "VPN connected but no access to resources",
+    "symptoms": ["vpn connected no access", "cannot reach internal servers", "split tunnel issues"],
+    "causes": ["Incorrect routing", "Firewall rules", "DNS not updated", "Permissions"],
+    "steps": [
+      "Disconnect and reconnect the VPN.",
+      "Verify you are using the correct VPN profile.",
+      "Check if split-tunneling is configured properly.",
+      "Flush DNS after connecting to VPN.",
+      "Contact network administrators to verify group policies and access rights."
+    ]
+  }
+]
