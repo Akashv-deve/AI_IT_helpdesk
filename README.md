@@ -88,7 +88,8 @@ python main.py mcp-check
 
 ### Diagnostics
 
-![Diagnostics](screenshots/diagnostics.png)
+![Diagnostics](screenshots/diagnostics1.png)
+![Diagnostics](screenshots/diagnostics2.png)
 
 ## Architecture
 
