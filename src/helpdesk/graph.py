@@ -51,7 +51,7 @@ def _build_args(tool_name: str, query: str) -> dict[str, Any]:
 
 def _route_node(state: AgentState, reasoner: Reasoner) -> AgentState:
     """Decide which tool answers this query."""
-    query = state["query"]
+    query = state.get("query", "")
     try:
         tool_name, reason = reasoner.route(query)
     except Exception as exc:
@@ -68,7 +68,7 @@ def _route_node(state: AgentState, reasoner: Reasoner) -> AgentState:
 
 def _execute_node(state: AgentState) -> AgentState:
     """Run the selected tool."""
-    result = run_tool(state["tool_name"], state.get("tool_args", {}))
+    result = run_tool(state.get("tool_name", ""), state.get("tool_args", {}))
     return {
         "tool_result": result.text,
         # Carried forward so the synthesis node can name the matched article.
@@ -97,20 +97,30 @@ def _escalate_node(state: AgentState) -> AgentState:
     """Low confidence: create a ticket and fold it into the reply."""
     ticket = run_tool(
         "create_support_ticket",
-        {"user_query": state["query"], "description": state.get("tool_result", "")},
+        {"user_query": state.get("query", ""), "description": state.get("tool_result", "")},
     )
     metadata = dict(state.get("tool_metadata", {}))
-    metadata["ticket_id"] = ticket.metadata.get("ticket_id")
+    ticket_id = ticket.metadata.get("ticket_id")
+    metadata["ticket_id"] = ticket_id
     combined = (
         f"{state.get('tool_result', '')}\n\n"
         f"I could not confidently resolve this automatically, so it has been "
         f"escalated.\n{ticket.text}"
     ).strip()
+
+    answer = (
+        "I could not find a reliable knowledge-base match for this issue, so it has\n"
+        "been escalated to the IT team.\n\n"
+        f"Ticket ID: {ticket_id}\n\n"
+        "Please keep this ticket ID for follow-up."
+    )
+
     return {
         "tool_result": combined,
         "tool_metadata": metadata,
         "escalated": True,
-        "ticket_id": ticket.metadata.get("ticket_id"),
+        "ticket_id": ticket_id,
+        "answer": answer,
     }
 
 
@@ -122,18 +132,25 @@ def _respond_node(state: AgentState, reasoner: Reasoner) -> AgentState:
         ok=bool(state.get("_ok", True)),
         metadata={**state.get("tool_metadata", {}), "ticket_id": state.get("ticket_id")},
     )
-    return {"answer": reasoner.synthesize(state["query"], result)}
+    return {"answer": reasoner.synthesize(state.get("query", ""), result)}
 
 
 def build_agent(reasoner: Reasoner | None = None):
     """Compile the graph. Pass a reasoner to inject a fake one in tests."""
     active = reasoner or get_reasoner()
 
+    # Define local wrapper functions to solve Pylance's lambda type inference issues
+    def route_wrapper(state: AgentState) -> AgentState:
+        return _route_node(state, active)
+
+    def respond_wrapper(state: AgentState) -> AgentState:
+        return _respond_node(state, active)
+
     graph = StateGraph(AgentState)
-    graph.add_node("route", lambda state: _route_node(state, active))
+    graph.add_node("route", route_wrapper)
     graph.add_node("execute", _execute_node)
     graph.add_node("escalate", _escalate_node)
-    graph.add_node("respond", lambda state: _respond_node(state, active))
+    graph.add_node("respond", respond_wrapper)
 
     graph.set_entry_point("route")
     graph.add_edge("route", "execute")
@@ -142,7 +159,7 @@ def build_agent(reasoner: Reasoner | None = None):
         _should_escalate,
         {"escalate": "escalate", "respond": "respond"},
     )
-    graph.add_edge("escalate", "respond")
+    graph.add_edge("escalate", END)
     graph.add_edge("respond", END)
 
     return graph.compile()
