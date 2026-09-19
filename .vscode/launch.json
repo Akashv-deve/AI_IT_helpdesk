@@ -1,0 +1,73 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Web UI (Streamlit)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "streamlit",
+      "args": ["run", "${workspaceFolder}/app.py"],
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "Web UI (Streamlit, offline)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "streamlit",
+      "args": ["run", "${workspaceFolder}/app.py"],
+      "console": "integratedTerminal",
+      "env": { "HELPDESK_OFFLINE": "1" }
+    },
+    {
+      "name": "Helpdesk: interactive chat",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/main.py",
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "Helpdesk: demo (verbose)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/main.py",
+      "args": ["demo"],
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "Helpdesk: demo (offline, no Ollama)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/main.py",
+      "args": ["demo", "--offline"],
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "Helpdesk: doctor",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/main.py",
+      "args": ["doctor"],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Helpdesk: MCP stdio check",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/main.py",
+      "args": ["mcp-check"],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "MCP server (stdio)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "helpdesk.mcp_server",
+      "console": "integratedTerminal",
+      "env": { "PYTHONPATH": "${workspaceFolder}/src" }
+    }
+  ]
+}

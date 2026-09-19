@@ -205,44 +205,71 @@ Database file is created automatically at `data/helpdesk.db`.
 
 Key files:
 
-| File                | Role                                      |
-|---------------------|-------------------------------------------|
-| `agent_client.py`   | LangGraph agent + Rich CLI + demo mode    |
-| `mcp_server.py`     | FastMCP server defining the four tools    |
-| `database.py`       | SQLite helpers                            |
-| `knowledge_base.py` | JSON loader and simple keyword search     |
-| `data/helpdesk_kb.json` | Knowledge articles                   |
+| File                              | Role                                                     |
+|-----------------------------------|----------------------------------------------------------|
+| `main.py`                         | Zero-install entry point (press F5 in VS Code)           |
+| `src/helpdesk/graph.py`           | LangGraph state machine and the escalation branch        |
+| `src/helpdesk/tools.py`           | The four tools — single source of truth                  |
+| `src/helpdesk/llm.py`             | Ollama reasoner plus the rule-based fallback             |
+| `src/helpdesk/knowledge_base.py`  | Scored keyword retrieval with calibrated confidence      |
+| `src/helpdesk/database.py`        | SQLite conversations and tickets                         |
+| `src/helpdesk/mcp_server.py`      | Exposes the four tools over MCP (stdio)                  |
+| `src/helpdesk/mcp_client.py`      | Real MCP client used by the `mcp-check` command          |
+| `src/helpdesk/cli.py`             | Rich terminal interface                                  |
+| `src/helpdesk/service.py`         | UI-facing facade: validation and error containment        |
+| `app.py` + `src/web/`             | Six-page Streamlit web application                       |
+| `src/helpdesk/config.py`          | Settings loaded from `.env`, with defaults               |
+| `data/helpdesk_kb.json`           | 16 curated knowledge articles                            |
+| `tests/`                          | 115 pytest cases, runnable without Ollama                 |
 
-The same tool logic is available both through the MCP server and directly inside the agent client, guaranteeing that the demo always works even if an external MCP transport is not used.
+Both the MCP server and the agent import their tool implementations from
+`tools.py`, so the two surfaces can never drift apart. The agent calls the tools
+in-process for speed; `python main.py mcp-check` proves the MCP path works by
+spawning the server over stdio, completing the handshake and invoking a tool for
+real.
+
+A design note worth highlighting: each tool returns a `ToolResult` carrying both
+human-readable text and a confidence score. MCP requires a plain string, so the
+server returns `.text`; the agent keeps the whole object and routes on the
+score.
 
 ---
 
 ### 14. Demo / Results
 
-Running `python agent_client.py --demo` executes three scenarios and prints:
+Running `python main.py demo` executes four scenarios and prints, for each one:
 
-- USER QUERY
-- AGENT DECISION (selected tool)
-- MCP TOOL CALLED
-- TOOL RESULT
-- FINAL RESPONSE
+- the user query
+- the agent trace (tool chosen, why, match confidence, whether it escalated)
+- the raw tool result
+- the final response
 
-Typical outcomes:
+Observed outcomes:
 
-- Wi-Fi query → knowledge-base search → step-by-step reconnect instructions
-- Slow computer → diagnose_issue → causes + Task Manager / Disk Cleanup steps
-- Login problem → knowledge-base or diagnose → password reset guidance
+| Query | Tool | Confidence | Outcome |
+|---|---|---|---|
+| Wi-Fi keeps disconnecting | `diagnose_issue` | 78% | Answered with causes and steps |
+| Printer says offline | `search_knowledge_base` | 65% | Answered with spooler/driver steps |
+| Quantum flux capacitor misaligned | `search_knowledge_base` | 0% | **Escalated** — ticket raised |
+| Show my system information | `get_system_info` | 100% | Answered directly |
 
-Tickets are successfully created with IDs such as `TKT-20260910154321`.
+The third case is the one to demonstrate: the query matches nothing, retrieval
+returns no articles, the conditional edge fires, and a ticket such as
+`TKT-20260917-050146-8108` is created instead of an invented answer.
+
+Ticket IDs combine a UTC timestamp with a random suffix; a test creates 50
+tickets within the same second to confirm none collide.
 
 ---
 
 ### 15. Challenges
 
 1. **Small model reliability** – qwen2.5:3b sometimes produces imperfect JSON; robust parsing and fallbacks were added.
-2. **MCP transport** – full stdio client complexity was simplified for a reliable student demo while still keeping a proper MCP server.
+2. **MCP transport** – the agent calls tools in-process for speed and easier debugging, but a full stdio client (`mcp_client.py`) was still implemented so the MCP layer is verifiable rather than merely claimed. The SDK's rename of `FastMCP` to `MCPServer` in version 2.0 also required a compatibility shim so the project installs cleanly on either major version.
 3. **Python version** – code written to be compatible with modern Python (3.10–3.14).
 4. **Keeping the project viva-friendly** – avoided heavy frameworks and unnecessary abstraction.
+5. **Making it runnable without a GPU** – a deterministic rule-based reasoner stands in when Ollama is unavailable, which also lets the test suite run in CI across Python 3.10, 3.11 and 3.12.
+6. **Avoiding confident wrong answers** – retrieval originally returned the first article whenever nothing matched. Returning an empty result instead, and branching to ticket creation on low confidence, was the single most important correctness change.
 
 ---
 
